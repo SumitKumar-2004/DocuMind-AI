@@ -20,6 +20,10 @@ const pdfSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    extractedText: {
+      type: String,
+      default: "",
+    },
     fileSize: {
       type: Number, // size in bytes
     },
@@ -35,7 +39,7 @@ const pdfSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const PDF = mongoose.model("PDF", pdfSchema);

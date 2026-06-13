@@ -2,6 +2,7 @@ import { OllamaEmbeddings, ChatOllama } from "@langchain/ollama";
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import path from "path";
+import PDF from "../models/PDF.js";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
@@ -224,18 +225,120 @@ ${question}
 
 * Remove PDF from vector store
   */
-export const removePDFFromVectorStore = async (userId, pdfId) => {
+export const removePDFFromVectorStore = async (
+  userId,
+  deletedPdfId
+) => {
   try {
     const storePath = getUserVectorStorePath(userId);
 
+    // No vector store exists
     if (!fs.existsSync(storePath)) {
+      console.log("No vector store found.");
       return;
     }
 
-    console.log(`Removing PDF ${pdfId} from vector store`);
+    // Get all PDFs except the one being deleted
+    const remainingPDFs = await PDF.find({
+      userId,
+      _id: { $ne: deletedPdfId },
+    });
 
-    console.log("Vector store cleanup skipped.");
+    // If no PDFs remain, remove FAISS completely
+    if (remainingPDFs.length === 0) {
+      fs.rmSync(storePath, {
+        recursive: true,
+        force: true,
+      });
+
+      console.log(
+        "No PDFs left. Vector store removed completely."
+      );
+
+      return;
+    }
+
+    const embeddings = getEmbeddings();
+
+    const splitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+      chunkOverlap: 200,
+    });
+
+    let allDocs = [];
+
+    // Recreate chunks from remaining documents
+    for (const pdf of remainingPDFs) {
+      try {
+        // Skip old records that don't contain extracted text
+        if (!pdf.extractedText?.trim()) {
+          console.warn(
+            `Skipping ${pdf.originalName} (no extracted text found)`
+          );
+          continue;
+        }
+
+        const docs = await splitter.createDocuments(
+          [pdf.extractedText],
+          [
+            {
+              pdfId: pdf._id.toString(),
+              fileName: pdf.originalName,
+              userId: userId.toString(),
+            },
+          ]
+        );
+
+        allDocs.push(...docs);
+      } catch (err) {
+        console.error(
+          `Failed to process ${pdf.originalName}:`,
+          err.message
+        );
+      }
+    }
+
+    // No valid documents remain
+    if (allDocs.length === 0) {
+      fs.rmSync(storePath, {
+        recursive: true,
+        force: true,
+      });
+
+      console.log(
+        "No valid document chunks remain. Vector store removed."
+      );
+
+      return;
+    }
+
+    // Delete old FAISS index
+    if (fs.existsSync(storePath)) {
+      fs.rmSync(storePath, {
+        recursive: true,
+        force: true,
+      });
+    }
+
+    console.log(
+      `Rebuilding FAISS with ${allDocs.length} chunks...`
+    );
+
+    // Create fresh FAISS index
+    const newStore = await FaissStore.fromDocuments(
+      allDocs,
+      embeddings
+    );
+
+    await newStore.save(storePath);
+
+    console.log(
+      `FAISS rebuilt successfully. Total chunks: ${allDocs.length}`
+    );
   } catch (error) {
-    console.error("removePDFFromVectorStore error:", error.message);
+    console.error(
+      "removePDFFromVectorStore error:",
+      error.message
+    );
   }
 };

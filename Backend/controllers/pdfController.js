@@ -94,15 +94,15 @@ export const uploadPDFs = async (req, res) => {
 
           continue;
         }
-
-        const pdf = await PDF.create({
-          userId: req.user._id,
-          fileName: file.filename,
-          originalName: file.originalname,
-          filePath: file.path,
-          fileSize: file.size,
-          pageCount: fileData.pages,
-        });
+const pdf = await PDF.create({
+  userId: req.user._id,
+  fileName: file.filename,
+  originalName: file.originalname,
+  filePath: file.path,
+  extractedText,
+  fileSize: file.size,
+  pageCount: fileData.pages,
+});
 
         console.log(`Saved to MongoDB: ${pdf._id}`);
 
@@ -111,6 +111,7 @@ export const uploadPDFs = async (req, res) => {
           extractedText,
           pdf._id.toString(),
           file.originalname,
+          extractedText,
         );
 
         console.log("✅ Indexed in FAISS");

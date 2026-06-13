@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoPng from "../assets/logo.png";
+import { GoogleLogin } from "@react-oauth/google";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -92,6 +93,29 @@ const Register = () => {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          credential: credentialResponse.credential,
+        }),
+      });
+
+      const data = await res.json();
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google Register Error:", error);
     }
   };
 
@@ -280,18 +304,35 @@ const Register = () => {
                   )}
                 </motion.button>
 
-                <button
-                  type="button"
-                  className="inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white/85 px-5 py-3.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-900"
-                >
-                  <Globe className="h-4 w-4" />
-                  Continue with Google
-                </button>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+                  </div>
+
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-3 text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => {
+                      console.log("Google Register Failed");
+                    }}
+                    theme="outline"
+                    size="large"
+                    shape="pill"
+                    width="320"
+                  />
+                </div>
               </form>
 
-              <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
+              {/* <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
                 By continuing, you agree to our Terms and Privacy Policy.
-              </p>
+              </p> */}
 
               <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">
                 Already have an account?{" "}
