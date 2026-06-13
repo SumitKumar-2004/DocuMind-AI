@@ -228,16 +228,7 @@ const ChatBox = ({ initialHistory = [] }) => {
             </p>
 
             <p className="text-xs text-slate-400 mt-1 max-w-sm">
-              Ask anything.
-              <br />
-              • Chat with documents
-              <br />
-              • Generate code
-              <br />
-              • Compare files
-              <br />
-              • Summarize documents
-              <br />• Answer general questions
+              Ask anything...
             </p>
           </div>
         ) : (

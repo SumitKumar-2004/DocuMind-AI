@@ -5,6 +5,9 @@ import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Chat from "./pages/Chat.jsx";
 import Landing from "./pages/Landing.jsx";
+import Documents from "./pages/Documents.jsx";
+import History from "./pages/History.jsx";
+import Settings from "./pages/Settings.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 // Protected route component - redirects to login if not authenticated
@@ -59,6 +62,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <Chat />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/documents"
+            element={
+              <ProtectedRoute>
+                <Documents />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute>
+                <History />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             }
           />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import logoPng from "../assets/logo.png";
 import {
   ArrowRight,
   BarChart3,
@@ -13,7 +14,7 @@ import {
   FileText,
   Files,
   Image,
-//   Linkedin,
+  //   Linkedin,
   Lock,
   MessageSquare,
   MoonStar,
@@ -28,7 +29,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import LandingNavbar from "../components/LandingNavbar.jsx";
+import Navbar from "../components/layout/Navbar.jsx";
 
 const features = [
   {
@@ -328,7 +329,7 @@ const Landing = () => {
         <div className="absolute bottom-[-8rem] left-[20%] h-80 w-80 rounded-full bg-fuchsia-500/15 blur-3xl dark:bg-fuchsia-500/15" />
       </div>
 
-      <LandingNavbar />
+      <Navbar />
 
       <main>
         <section className="mx-auto max-w-7xl px-4 pb-20 pt-14 sm:px-6 lg:px-8 lg:pb-28 lg:pt-20">
@@ -1154,7 +1155,11 @@ const Landing = () => {
           <div>
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900">
-                🧠
+                <img
+                                src={logoPng}
+                                alt="DocuMind AI"
+                                className="h-9 w-9 rounded-2xl object-contain"
+                              />
               </span>
               <div>
                 <p className="text-sm font-semibold text-slate-900 dark:text-white">

@@ -1,4 +1,5 @@
 import React from "react";
+import { Sun, Moon } from "lucide-react";
 import { useTheme } from "../context/ThemeContext.jsx";
 
 const ThemeToggle = () => {
@@ -7,14 +8,25 @@ const ThemeToggle = () => {
 
   return (
     <button
-      type="button"
       onClick={toggleTheme}
-      className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:border-primary hover:text-primary"
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      title={`Switch to ${isDark ? "light" : "dark"} mode`}
+      className="
+        h-11 w-11
+        rounded-2xl
+        border border-slate-700
+        bg-slate-900
+        flex items-center justify-center
+        transition-all duration-300
+        hover:scale-105
+      "
     >
-      <span className="text-sm">{isDark ? "☀️" : "🌙"}</span>
-      {/* <span className="hidden sm:inline">{isDark ? "Light" : "Dark"}</span> */}
+      {isDark ? (
+        <div className="relative">
+          <Sun className="h-5 w-5 text-amber-400" />
+          <div className="absolute inset-0 blur-md bg-amber-400 opacity-30 rounded-full" />
+        </div>
+      ) : (
+        <Moon className="h-5 w-5 text-blue-400" />
+      )}
     </button>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle.jsx";
+import logoPng from "../assets/logo.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,7 +20,13 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="text-xl">📄</span>
+            <span className="text-xl">
+              <img
+                src={logoPng}
+                alt="DocuMind AI"
+                className="h-9 w-9 rounded-2xl object-contain"
+              />
+            </span>
             <span className="font-semibold text-slate-800 text-sm sm:text-base">
               DocuMind AI
             </span>

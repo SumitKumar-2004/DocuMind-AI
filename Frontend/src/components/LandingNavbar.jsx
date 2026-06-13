@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle.jsx";
+import logoPng from "../assets/logo.png";
 
 const navItems = [
   { label: "Features", href: "#features" },
@@ -19,7 +20,11 @@ const LandingNavbar = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-lg text-white shadow-lg shadow-slate-900/20 dark:bg-white dark:text-slate-900">
-            🧠
+            <img
+              src={logoPng}
+              alt="DocuMind AI"
+              className="h-9 w-9 rounded-2xl object-contain"
+            />
           </span>
           <div>
             <p className="text-sm font-semibold tracking-tight text-slate-900 dark:text-white sm:text-base">
