@@ -96,28 +96,35 @@ const Register = () => {
     }
   };
 
+  // const handleGoogleSuccess = async (credentialResponse) => {
+  //   try {
+  //     const res = await fetch("http://localhost:5000/api/auth/google", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         credential: credentialResponse.credential,
+  //       }),
+  //     });
+
   const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
-      });
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/google`,
+      {
+        credential: credentialResponse.credential,
+      }
+    );
 
-      const data = await res.json();
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Google Register Error:", error);
-    }
-  };
+    navigate("/dashboard");
+  } catch (error) {
+    console.error("Google Register Error:", error);
+  }
+};
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-slate-900 dark:text-white">

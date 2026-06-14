@@ -68,9 +68,16 @@ const Login = () => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/google", {
-        credential: credentialResponse.credential,
-      });
+      // const res = await axios.post("http://localhost:5000/api/auth/google", {
+      //   credential: credentialResponse.credential,
+      // });
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/google`,
+        {
+          credential: credentialResponse.credential,
+        },
+      );
 
       localStorage.setItem("token", res.data.token);
 
