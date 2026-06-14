@@ -23,8 +23,10 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://documind-ai-nr3q.onrender.com",
+      "http://127.0.0.1:3000",
+      "https://documind-ai-gamma-two.vercel.app",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
