@@ -9,6 +9,9 @@ import Landing from "./pages/Landing.jsx";
 import Documents from "./pages/Documents.jsx";
 import History from "./pages/History.jsx";
 import Settings from "./pages/Settings.jsx";
+import ProfileSettings from "./pages/settings/ProfileSettings.jsx";
+import ChangePassword from "./pages/settings/ChangePassword.jsx";
+import DeleteAccount from "./pages/settings/DeleteAccount.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 // Protected route component - redirects to login if not authenticated
@@ -93,6 +96,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/profile"
+            element={
+              <ProtectedRoute>
+                <ProfileSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/password"
+            element={
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/delete-account"
+            element={
+              <ProtectedRoute>
+                <DeleteAccount />
               </ProtectedRoute>
             }
           />

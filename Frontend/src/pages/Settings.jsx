@@ -71,11 +71,7 @@ const Settings = () => {
 
             <div className="mt-5">
               <button
-                onClick={() =>
-                  alert(
-                    "Update profile UI is not wired to backend endpoints in this redesign.",
-                  )
-                }
+                onClick={() => (window.location.href = "/settings/profile")}
                 className="w-full rounded-2xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-colors"
               >
                 Update profile
@@ -134,14 +130,11 @@ const Settings = () => {
                   Change password
                 </p>
                 <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                  Password update is not wired in backend endpoints yet.
+                  Update your password securely.
                 </p>
+
                 <button
-                  onClick={() =>
-                    alert(
-                      "Change password is not wired to backend endpoints in this redesign.",
-                    )
-                  }
+                  onClick={() => (window.location.href = "/settings/password")}
                   className="mt-3 w-full rounded-2xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold shadow-lg shadow-slate-900/20 hover:bg-slate-800 transition-colors"
                 >
                   Update password
@@ -152,13 +145,12 @@ const Settings = () => {
                   Account actions
                 </p>
                 <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                  Logout and delete account are UI placeholders.
+                  Delete your account permanently.
                 </p>
+
                 <button
                   onClick={() =>
-                    alert(
-                      "Delete account is not wired to backend endpoints in this redesign.",
-                    )
+                    (window.location.href = "/settings/delete-account")
                   }
                   className="mt-3 w-full rounded-2xl bg-red-50/70 dark:bg-red-500/10 border border-red-200/70 dark:border-red-500/20 text-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-100/90 dark:hover:bg-red-500/15 transition-colors"
                 >

@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -11,6 +12,8 @@ import {
 } from "lucide-react";
 import logoPng from "../assets/logo.png";
 import ThemeToggle from "../components/ThemeToggle.jsx";
+import Avatar from "../components/Avatar.jsx";
+import { useLocalStorageUser } from "../hooks/useLocalStorageUser.js";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", Icon: BarChart3 },
@@ -22,10 +25,9 @@ const navItems = [
 
 const DocuMindDashboardLayout = ({ children }) => {
   const navigate = useNavigate();
-  const user = useMemo(
-    () => JSON.parse(localStorage.getItem("user") || "{}"),
-    [],
-  );
+  // Reactive user so Avatar updates immediately after profile changes.
+  const user = useLocalStorageUser();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const handleLogout = () => {
@@ -69,11 +71,8 @@ const DocuMindDashboardLayout = ({ children }) => {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <div className="h-9 w-9 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-100/70 dark:border-slate-800/60 flex items-center justify-center">
-              <span className="text-sm font-semibold">
-                {(user?.name || "U").split(" ")[0]?.[0]?.toUpperCase() || "U"}
-              </span>
-            </div>
+            {/* Global avatar component */}
+            <Avatar user={user} size="md" />
             <div className="min-w-0">
               <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">
                 {user?.name || "User"}
@@ -121,13 +120,10 @@ const DocuMindDashboardLayout = ({ children }) => {
 
                     <div className="mt-5 border-t border-slate-100/70 dark:border-slate-800/60 pt-4">
                       <div className="flex items-center gap-3 px-2">
-                        <div className="h-11 w-11 rounded-2xl bg-slate-100 dark:bg-slate-800/70 border border-slate-100/70 dark:border-slate-800/60 flex items-center justify-center">
-                          <img
-                            src={logoPng}
-                            alt="DocuMind AI"
-                            className="h-9 w-9 object-contain"
-                          />
+                        <div className="h-11 w-11 flex items-center justify-center">
+                          <Avatar user={user} size="md" />
                         </div>
+
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                             {user?.name || "User"}

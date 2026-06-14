@@ -7,6 +7,8 @@ import {
   uploadPDFs,
   getUserPDFs,
   deletePDF,
+  viewDocument,
+  downloadDocument,
 } from "../controllers/pdfController.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -99,6 +101,9 @@ const handleMulterUpload = (req, res, next) => {
 router.post("/upload", protect, handleMulterUpload, uploadPDFs);
 
 router.get("/list", protect, getUserPDFs);
+
+router.get("/view/:id", protect, viewDocument);
+router.get("/download/:id", protect, downloadDocument);
 
 router.delete("/:id", protect, deletePDF);
 

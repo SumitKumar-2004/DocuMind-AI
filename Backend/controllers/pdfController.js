@@ -94,15 +94,15 @@ export const uploadPDFs = async (req, res) => {
 
           continue;
         }
-const pdf = await PDF.create({
-  userId: req.user._id,
-  fileName: file.filename,
-  originalName: file.originalname,
-  filePath: file.path,
-  extractedText,
-  fileSize: file.size,
-  pageCount: fileData.pages,
-});
+        const pdf = await PDF.create({
+          userId: req.user._id,
+          fileName: file.filename,
+          originalName: file.originalname,
+          filePath: file.path,
+          extractedText,
+          fileSize: file.size,
+          pageCount: fileData.pages,
+        });
 
         console.log(`Saved to MongoDB: ${pdf._id}`);
 
@@ -191,6 +191,160 @@ export const getUserPDFs = async (req, res) => {
 
 * DELETE /api/pdf/:id
   */
+const getFileExtension = (filename = "") => {
+  const ext = filename.split(".").pop()?.toLowerCase() || "";
+  return ext;
+};
+
+const streamFile = (res, filePath, contentType) => {
+  if (!filePath) {
+    return res.status(404).json({
+      success: false,
+      message: "File not found.",
+    });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({
+      success: false,
+      message: "File missing on server.",
+    });
+  }
+
+  res.setHeader("Content-Type", contentType);
+  res.setHeader("Cache-Control", "no-store");
+
+  // For PDFs and text-like docs this will render inline.
+  // For other types, the browser may still download.
+  const stat = fs.statSync(filePath);
+  if (Number.isFinite(stat.size)) res.setHeader("Content-Length", stat.size);
+
+  const readStream = fs.createReadStream(filePath);
+  readStream.on("error", () => {
+    res.status(500).json({
+      success: false,
+      message: "Failed to read file.",
+    });
+  });
+  readStream.pipe(res);
+};
+
+/**
+ * GET /api/pdf/view/:id
+ */
+export const viewDocument = async (req, res) => {
+  try {
+    const pdf = await PDF.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
+    if (!pdf) {
+      return res.status(404).json({
+        success: false,
+        message: "File not found or permission denied.",
+      });
+    }
+
+    if (!pdf.filePath || !fs.existsSync(pdf.filePath)) {
+      return res.status(404).json({
+        success: false,
+        message: "File missing on server.",
+      });
+    }
+
+    const ext = getFileExtension(pdf.originalName);
+
+    if (ext === "pdf") {
+      return streamFile(res, pdf.filePath, "application/pdf");
+    }
+
+    if (["txt", "md", "csv"].includes(ext)) {
+      const contentType = "text/plain; charset=utf-8";
+      return streamFile(res, pdf.filePath, contentType);
+    }
+
+    if (ext === "docx") {
+      // For DOCX we return the raw DOCX for the browser to handle.
+      // (Rendering DOCX as HTML requires additional conversion; keep production-safe.)
+      return streamFile(
+        res,
+        pdf.filePath,
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      );
+    }
+
+    // Fallback: download-ish type
+    return streamFile(res, pdf.filePath, "application/octet-stream");
+  } catch (error) {
+    console.error("View File Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to view file.",
+    });
+  }
+};
+
+/**
+ * GET /api/pdf/download/:id
+ */
+export const downloadDocument = async (req, res) => {
+  try {
+    const pdf = await PDF.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
+
+    if (!pdf) {
+      return res.status(404).json({
+        success: false,
+        message: "File not found or permission denied.",
+      });
+    }
+
+    if (!pdf.filePath || !fs.existsSync(pdf.filePath)) {
+      return res.status(404).json({
+        success: false,
+        message: "File missing on server.",
+      });
+    }
+
+    // Use original filename.
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${pdf.originalName}"`,
+    );
+
+    const ext = getFileExtension(pdf.originalName);
+    const contentType =
+      ext === "pdf"
+        ? "application/pdf"
+        : ext === "docx"
+          ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          : ext === "csv" || ext === "txt" || ext === "md"
+            ? "text/plain; charset=utf-8"
+            : "application/octet-stream";
+
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Cache-Control", "no-store");
+
+    const readStream = fs.createReadStream(pdf.filePath);
+    readStream.on("error", () => {
+      res.status(500).json({
+        success: false,
+        message: "Failed to read file.",
+      });
+    });
+    readStream.pipe(res);
+  } catch (error) {
+    console.error("Download File Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to download file.",
+    });
+  }
+};
+
 export const deletePDF = async (req, res) => {
   try {
     const pdf = await PDF.findOne({

@@ -19,7 +19,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Response interceptor - handle auth errors globally
@@ -33,7 +33,7 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // ── Auth ──────────────────────────────────────────────
@@ -49,6 +49,13 @@ export const uploadPDFs = (formData) =>
 export const fetchPDFs = () => api.get("/pdf/list");
 
 export const deletePDF = (id) => api.delete(`/pdf/${id}`);
+
+export const viewDocument = (id) => api.get(`/pdf/view/${id}`);
+
+export const downloadDocument = (id) =>
+  api.get(`/pdf/download/${id}`, {
+    responseType: "blob",
+  });
 
 // ── Chat ──────────────────────────────────────────────
 export const askQuestion = (question) => api.post("/chat/ask", { question });

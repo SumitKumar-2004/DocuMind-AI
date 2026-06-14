@@ -115,10 +115,61 @@ const Documents = () => {
     }
   };
 
-  const onViewOrDownload = (label) => {
-    alert(
-      `${label} is not wired to backend endpoints in this UI-only redesign.`,
-    );
+  const handleView = async (id) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/pdf/view/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        },
+      );
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(msg || "Failed to view document.");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank", "noopener,noreferrer");
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    } catch (e) {
+      alert(e?.message || "Failed to view document.");
+    }
+  };
+
+  const handleDownload = async (id, originalName) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/pdf/download/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+        },
+      );
+
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(msg || "Failed to download document.");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = originalName || "document";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    } catch (e) {
+      alert(e?.message || "Failed to download document.");
+    }
   };
 
   return (
@@ -280,7 +331,7 @@ const Documents = () => {
 
                       <div className="flex items-center gap-2 shrink-0">
                         <button
-                          onClick={() => onViewOrDownload("View")}
+                          onClick={() => handleView(pdf._id)}
                           className="hidden sm:inline-flex items-center rounded-xl px-3 py-1.5 text-xs font-semibold bg-white/60 dark:bg-slate-950/20 border border-slate-100/70 dark:border-slate-800/60 text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-900/40 transition-colors"
                           aria-label="View"
                         >
@@ -288,7 +339,9 @@ const Documents = () => {
                           View
                         </button>
                         <button
-                          onClick={() => onViewOrDownload("Download")}
+                          onClick={() =>
+                            handleDownload(pdf._id, pdf.originalName)
+                          }
                           className="hidden sm:inline-flex items-center rounded-xl px-3 py-1.5 text-xs font-semibold bg-white/60 dark:bg-slate-950/20 border border-slate-100/70 dark:border-slate-800/60 text-slate-700 dark:text-slate-200 hover:bg-white/90 dark:hover:bg-slate-900/40 transition-colors"
                           aria-label="Download"
                         >

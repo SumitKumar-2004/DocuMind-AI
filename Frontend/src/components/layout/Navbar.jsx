@@ -1,8 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { BarChart3, Bot, FileText, History, Settings } from "lucide-react";
 import logoPng from "../../assets/logo.png";
 import ThemeToggle from "../../components/ThemeToggle.jsx";
+import Avatar from "../../components/Avatar.jsx";
+import { useLocalStorageUser } from "../../hooks/useLocalStorageUser.js";
 
 const navItemsLoggedIn = [
   { to: "/dashboard", label: "Dashboard", Icon: BarChart3 },
@@ -20,10 +23,7 @@ const navItemsLoggedOut = [
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const user = useMemo(
-    () => JSON.parse(localStorage.getItem("user") || "{}"),
-    [],
-  );
+  const user = useLocalStorageUser();
   const isAuthed = Boolean(localStorage.getItem("token"));
 
   const handleLogout = () => {
@@ -112,11 +112,10 @@ const Navbar = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <div className="hidden sm:flex items-center gap-2 px-2">
-                  <div className="h-9 w-9 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-100/70 dark:border-slate-800/60 flex items-center justify-center">
-                    <span className="text-sm font-semibold">
-                      {(user?.name || "U")[0]?.toUpperCase() || "U"}
-                    </span>
+                  <div className="h-9 w-9 rounded-2xl bg-transparent flex items-center justify-center">
+                    <Avatar user={user} size="sm" />
                   </div>
+
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">
                       {user?.name || "User"}

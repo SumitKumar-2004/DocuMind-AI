@@ -117,6 +117,7 @@ export const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        avatar: user.avatar || "",
       },
     });
   } catch (error) {
@@ -152,6 +153,7 @@ export const googleLogin = async (req, res) => {
       email: email.toLowerCase(),
     });
 
+    // Create user if it doesn't exist
     if (!user) {
       user = await User.create({
         name,
@@ -159,6 +161,18 @@ export const googleLogin = async (req, res) => {
         avatar: picture,
         isGoogleUser: true,
       });
+    } else {
+      // Existing Google user:
+      // - If avatar is missing, set it to the latest Google picture.
+      // - If avatar exists, keep it unless a newer Google picture is available.
+      if (!user.avatar && picture) {
+        user.avatar = picture;
+        await user.save();
+      } else if (picture && picture !== user.avatar) {
+        // Keep existing unless Google provides a different picture URL.
+        user.avatar = picture;
+        await user.save();
+      }
     }
 
     const token = generateToken(user._id);
@@ -170,7 +184,7 @@ export const googleLogin = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        avatar: user.avatar,
+        avatar: user.avatar || picture || "",
       },
     });
   } catch (error) {
