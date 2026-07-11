@@ -1,256 +1,185 @@
 # 🧠 DocuMind AI
 
-### AI-Powered Document Intelligence Platform
+**AI-Powered Document Intelligence Platform**
 
-DocuMind AI is a full-stack AI application that combines **Conversational AI** with **Document Intelligence**. Users can upload documents, search information semantically, compare files, generate summaries, and interact with an AI assistant powered by **Ollama**, **LangChain**, and **FAISS**.
+A full-stack application that combines conversational AI with advanced document intelligence. Upload documents, perform semantic searches, and get intelligent insights powered by local LLMs via Ollama.
 
----
-
-## 🚀 Features
-
-### 🤖 AI Assistant
-
-* General AI Chat
-* Coding Assistance
-* Knowledge-Based Q&A
-* Intelligent Conversations
-
-### 📄 Multi-Document Intelligence
-
-* Chat with uploaded documents
-* Semantic document search
-* Multi-document analysis
-* Cross-document comparison
-* Document summarization
-
-### 📂 Supported File Types
-
-* PDF
-* DOCX
-* TXT
-* CSV
-* XLSX
-* Markdown (.md)
-
-### 🔍 RAG Pipeline
-
-* Text Extraction
-* Document Chunking
-* Embedding Generation
-* FAISS Vector Search
-* Context Retrieval
-* AI-Powered Response Generation
-
-### 🔐 User Management
-
-* JWT Authentication
-* Secure User Accounts
-* Chat History
-* Document Management
-
-### ⚡ Local AI
-
-* Ollama Integration
-* llama3.2
-* nomic-embed-text
-* No OpenAI API required
-* Fully local inference
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Tech Stack](https://img.shields.io/badge/Stack-MERN-green.svg)]()
 
 ---
 
-## 🏗️ System Architecture
+## ✨ Key Features
 
-```text
-Upload Document
-       │
-       ▼
-Text Extraction
-       │
-       ▼
-Chunking
-       │
-       ▼
-Embeddings (nomic-embed-text)
-       │
-       ▼
-FAISS Vector Store
-       │
-       ▼
-Similarity Search
-       │
-       ▼
-Retrieved Context
-       │
-       ▼
-Ollama (llama3.2)
-       │
-       ▼
-AI Response
+### 🤖 Intelligent AI Assistant
+- Chat with uploaded documents
+- Semantic document search
+- Multi-document analysis & comparison
+- Automatic document summarization
+- General knowledge Q&A
+
+### 📄 Multi-Format Support
+- **Documents**: PDF, DOCX, TXT, Markdown
+- **Data**: CSV, XLSX
+- **Indexing**: Automatic text extraction & embedding
+
+### 🔍 Advanced RAG Pipeline
+- Text extraction & chunking
+- Embedding generation (nomic-embed-text)
+- FAISS vector search
+- Intelligent context retrieval
+- AI-powered response generation
+
+### 🔐 Secure & Private
+- JWT-based authentication
+- Local AI inference (no API dependencies)
+- Secure user sessions
+- Chat history & document management
+
+---
+
+## 🏛️ Architecture
+
+```
+Upload Document → Text Extraction → Chunking → Embeddings
+     ↓
+FAISS Vector Store → Similarity Search → Retrieved Context
+     ↓
+Ollama (llama3.2) → AI Response Generation
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-
-* React.js
-* Tailwind CSS
-* Axios
-* React Router
-
-### Backend
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-
-### AI & RAG
-
-* Ollama
-* LangChain
-* FAISS
-* nomic-embed-text
-* llama3.2
-
-### Database
-
-* MongoDB
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | React.js, Tailwind CSS, Axios, React Router |
+| **Backend** | Node.js, Express.js, MongoDB, Mongoose |
+| **AI/ML** | Ollama, LangChain, FAISS, nomic-embed-text, llama3.2 |
+| **Database** | MongoDB |
 
 ---
 
-## 📸 Core Functionalities
+## 🚀 Quick Start
 
-### Document Upload
+### Prerequisites
+- Node.js (v16+)
+- MongoDB
+- Ollama
 
-Upload multiple documents and automatically index them for semantic retrieval.
+### Installation
 
-### AI Chat
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/SumitKumar-2004/DocuMind-AI.git
+   cd DocuMind-AI
+   ```
 
-Ask questions related to uploaded documents or general knowledge questions.
+2. **Backend Setup**
+   ```bash
+   cd Backend
+   npm install
+   ```
+   
+   Create `.env`:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret_key
+   PORT=5000
+   ```
+   
+   Start server:
+   ```bash
+   npm run dev
+   ```
 
-### Semantic Search
+3. **Frontend Setup**
+   ```bash
+   cd Frontend
+   npm install
+   ```
+   
+   Start application:
+   ```bash
+   npm run dev
+   ```
 
-Find information based on meaning instead of exact keyword matches.
-
-### Document Comparison
-
-Compare content across multiple uploaded documents.
-
-### Summarization
-
-Generate concise summaries of lengthy documents.
-
----
-
-## ⚙️ Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/SumitKumar-2004/DocuMind-AI.git
-cd DocuMind-AI
-```
-
-### Backend Setup
-
-```bash
-cd Backend
-npm install
-```
-
-### Frontend Setup
-
-```bash
-cd Frontend
-npm install
-```
-
-### Environment Variables
-
-Create `.env` file:
-
-```env
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-```
-
-### Start Backend
-
-```bash
-npm run dev
-```
-
-### Start Frontend
-
-```bash
-npm run dev
-```
-
-### Run Ollama
-
-```bash
-ollama serve
-```
-
-### Pull Required Models
-
-```bash
-ollama pull llama3.2
-ollama pull nomic-embed-text
-```
+4. **Ollama Setup**
+   
+   Install [Ollama](https://ollama.ai) and pull required models:
+   ```bash
+   ollama serve
+   ```
+   
+   In another terminal:
+   ```bash
+   ollama pull llama3.2
+   ollama pull nomic-embed-text
+   ```
 
 ---
 
 ## 📁 Project Structure
 
-```text
-DocuMind-AI
-│
-├── Frontend
-│   ├── src
-│   ├── components
-│   ├── pages
-│   └── services
-│
-├── Backend
-│   ├── controllers
-│   ├── models
-│   ├── routes
-│   ├── middleware
-│   ├── utils
-│   └── vectorstore
-│
+```
+DocuMind-AI/
+├── Frontend/
+│   ├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+├── Backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── utils/
+│   └── vectorstore/
 └── README.md
 ```
 
 ---
 
-## 🎯 Future Enhancements
+## 🎯 Core Features
 
-* Google Authentication
-* Email Verification
-* Password Reset via OTP
-* User Profile & Avatar
-* OCR for Images
-* Dark / Light Mode
-* Advanced Document Analytics
-* Multi-Agent AI Workflows
-* Cloud Deployment
+| Feature | Description |
+|---------|-------------|
+| **Document Chat** | Ask questions about uploaded documents with AI-powered answers |
+| **Semantic Search** | Find information by meaning, not just keywords |
+| **Document Comparison** | Compare content across multiple documents |
+| **Summarization** | Generate concise summaries of lengthy documents |
+| **Multi-Document Q&A** | Query information across all indexed documents |
 
 ---
 
-## 👨‍💻 Developer
+## 📊 Future Roadmap
 
-**Sumit Kumar**
-
-MCA (Generative AI) Student
-SRM Institute of Science and Technology
+- [ ] Google OAuth authentication
+- [ ] Email verification & password reset
+- [ ] User profiles with avatars
+- [ ] OCR for image documents
+- [ ] Dark/Light theme support
+- [ ] Advanced document analytics
+- [ ] Multi-agent AI workflows
+- [ ] Cloud deployment options
 
 ---
 
-## 📄 License
+## 📝 License
 
-This project is developed for educational and portfolio purposes.
+This project is created for educational and portfolio purposes.
+
+---
+
+## 👤 Author
+
+**Sumit Kumar**  
+MCA (Generative AI) - SRM Institute of Science and Technology
+
+---
+
+## 🔗 Links
+
+- [Report Issues](https://github.com/SumitKumar-2004/DocuMind-AI/issues)
+- [View Repository](https://github.com/SumitKumar-2004/DocuMind-AI)
